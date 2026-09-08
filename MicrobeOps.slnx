@@ -1,0 +1,6 @@
+﻿<Solution>
+  <Project Path="Armada.Core.csproj" />
+  <Project Path="Armada.Core.Tests.csproj" />
+  <Project Path="Armada.Game.csproj" />
+  <Project Path="Armada.Game.Editor.csproj" />
+</Solution>
