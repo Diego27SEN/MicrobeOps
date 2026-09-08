@@ -1,0 +1,48 @@
+name: module-tests
+
+# Design doc section 13.2. The hard rule around this one: deploy-backend does not run unless this
+# is green. Module tests before every deploy, no exceptions.
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'CloudCode~/**'
+      - 'Assets/Scripts/Core/**'
+      - '.github/workflows/module-tests.yml'
+  pull_request:
+    paths:
+      - 'CloudCode~/**'
+      - 'Assets/Scripts/Core/**'
+      - '.github/workflows/module-tests.yml'
+  workflow_dispatch:
+
+jobs:
+  module-tests:
+    name: ArmadaModule (dotnet test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      # Core sources are triggers for this workflow as well as the module's own: the module
+      # compiles them, so a change to the rules is a change to the server.
+      - name: Test
+        run: >
+          dotnet test CloudCode~/ArmadaModule/TestProject/TestProject.csproj
+          --configuration Release
+          --logger "trx;LogFileName=module-tests.trx"
+          --results-directory TestResults
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: module-test-results
+          path: TestResults

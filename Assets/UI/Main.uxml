@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  The whole game, as panels of one document.
+
+  There is a single persistent scene and a single UIDocument; the router toggles which panel is
+  displayed. No screen is ever a scene load, which is what keeps the two taps to shooting budget
+  reachable.
+
+  Careful with comments in this file: XML forbids a double hyphen inside them, so a class name
+  like the active modifier written literally makes the whole document fail to parse. Unity then
+  produces no visual tree at all and every screen reports itself missing. An architecture test
+  now parses each UXML to make sure that cannot happen again quietly.
+
+  There is deliberately no Style element here. That attribute only resolves reliably with the
+  full project database URI including the fileID and GUID that the Editor generates; a
+  hand-written relative path imports without complaint and then applies nothing at all. The style
+  sheets are attached by UiPanelHost from serialized asset references that ProjectBootstrap
+  assigns, which is either wired or visibly null and cannot fail quietly.
+
+  Panels are hidden by the screen class and revealed by its active modifier, set by the router,
+  not by inline styles.
+
+  Element names are the contract with the screen controllers.
+-->
+<ui:UXML xmlns:ui="UnityEngine.UIElements">
+    <ui:VisualElement name="app" class="app">
+
+        <!--
+          The onboarding sits before the frame, in normal flow, so it pushes the screen down
+          instead of floating over it. Positioned absolutely it covered whatever header happened
+          to be underneath, and no amount of top margin fixes that for every screen at every text
+          scale.
+        -->
+        <ui:VisualElement name="tutorial" class="tutorial">
+            <ui:Label name="tutorial-text" class="tutorial__text" />
+            <ui:VisualElement class="tutorial__actions">
+                <ui:Button name="tutorial-next" class="button button--primary" />
+                <ui:Button name="tutorial-skip" class="button button--quiet" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+
+        <ui:VisualElement name="frame" class="frame">
+
+            <ui:VisualElement name="screen-home" class="screen screen--active screen--centered">
+                <ui:Label name="home-title" class="title title--hero" />
+                <ui:Label name="home-tagline" class="subtitle" />
+
+                <ui:VisualElement class="stack">
+                    <ui:Button name="home-play" class="button button--primary" />
+                    <ui:Button name="home-tutorial" class="button" />
+                    <ui:Button name="home-settings" class="button" />
+                    <ui:Button name="home-quit" class="button button--quiet" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="screen-mode" class="screen">
+                <ui:VisualElement class="screen__header">
+                    <ui:Label name="mode-title" class="title" />
+                </ui:VisualElement>
+
+                <ui:ScrollView class="screen__body">
+                    <ui:VisualElement class="card">
+                        <ui:VisualElement name="mode-boards" class="chips" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="card">
+                        <ui:VisualElement name="mode-difficulties" class="chips" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="stack">
+                        <ui:Button name="mode-vs-ai" class="button button--primary" />
+                        <ui:Button name="mode-local" class="button" />
+                        <ui:Button name="mode-online" class="button" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+
+                <ui:VisualElement class="toolbar">
+                    <ui:Button name="mode-back" class="button button--quiet" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="screen-placement" class="screen">
+                <ui:VisualElement class="screen__header">
+                    <ui:Label name="placement-title" class="title title--compact" />
+                    <ui:Label name="placement-remaining" class="subtitle" />
+                </ui:VisualElement>
+
+                <ui:ScrollView class="screen__body screen__body--centered">
+                    <ui:VisualElement name="placement-grid" class="grid-host" />
+                    <ui:Label name="placement-next-ship" class="badge" />
+                    <ui:Label name="placement-hint" class="hint" />
+                </ui:ScrollView>
+
+                <ui:VisualElement class="toolbar">
+                    <ui:Button name="placement-back" class="button button--quiet" />
+                    <ui:Button name="placement-random" class="button" />
+                    <ui:Button name="placement-rotate" class="button" />
+                    <ui:Button name="placement-confirm" class="button button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="screen-match" class="screen">
+                <ui:VisualElement class="screen__header">
+                    <ui:Label name="match-turn" class="title title--compact" />
+                    <ui:Label name="match-prompt" class="subtitle" />
+                </ui:VisualElement>
+
+                <ui:ScrollView class="screen__body">
+                    <ui:VisualElement class="board-block">
+                        <ui:Label name="match-enemy-caption" class="caption" />
+                        <ui:VisualElement name="match-enemy-grid" class="grid-host" />
+                        <ui:VisualElement name="match-enemy-fleet" class="fleet" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="board-block">
+                        <ui:Label name="match-own-caption" class="caption" />
+                        <ui:VisualElement name="match-own-grid" class="grid-host grid-host--small" />
+                        <ui:VisualElement name="match-own-fleet" class="fleet" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+
+                <ui:VisualElement class="toolbar">
+                    <ui:Button name="match-forfeit" class="button button--quiet" />
+                    <ui:Button name="match-fire" class="button button--primary" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="screen-summary" class="screen screen--centered">
+                <ui:Label name="summary-outcome" class="title title--hero" />
+
+                <ui:VisualElement class="stats">
+                    <ui:VisualElement name="summary-shots" class="stat" />
+                    <ui:VisualElement name="summary-accuracy" class="stat" />
+                </ui:VisualElement>
+
+                <ui:VisualElement class="stack">
+                    <ui:Button name="summary-rematch" class="button button--primary" />
+                    <ui:Button name="summary-home" class="button" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+            <ui:VisualElement name="screen-settings" class="screen">
+                <ui:VisualElement class="screen__header">
+                    <ui:Label name="settings-title" class="title" />
+                </ui:VisualElement>
+
+                <ui:ScrollView class="screen__body">
+                    <ui:VisualElement class="card">
+                        <ui:Slider name="settings-music" class="field" low-value="0" high-value="1" />
+                        <ui:Slider name="settings-sfx" class="field" low-value="0" high-value="1" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="card">
+                        <ui:VisualElement name="settings-colorblind" class="field" />
+                        <ui:VisualElement name="settings-text-scale" class="field" />
+                    </ui:VisualElement>
+
+                    <ui:VisualElement class="card">
+                        <ui:Toggle name="settings-reduce-motion" class="field" />
+                        <ui:Toggle name="settings-high-contrast" class="field" />
+                        <ui:Toggle name="settings-vibration" class="field" />
+                    </ui:VisualElement>
+                </ui:ScrollView>
+
+                <ui:VisualElement class="toolbar">
+                    <ui:Button name="settings-back" class="button button--quiet" />
+                </ui:VisualElement>
+            </ui:VisualElement>
+
+        </ui:VisualElement>
+
+        <ui:Label name="toast" class="toast" />
+    </ui:VisualElement>
+</ui:UXML>

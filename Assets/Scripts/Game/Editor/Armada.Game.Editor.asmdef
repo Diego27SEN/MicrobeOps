@@ -1,0 +1,19 @@
+{
+    "name": "Armada.Game.Editor",
+    "rootNamespace": "Armada.Editor",
+    "references": [
+        "Armada.Core",
+        "Armada.Game"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

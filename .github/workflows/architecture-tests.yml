@@ -1,0 +1,40 @@
+name: architecture-tests
+
+# Design doc section 6.2. These read the repository as data and fail the build when a structural
+# rule is broken: engine references in Core, ambient time or RNG, missing nullable enforcement,
+# file-scoped namespaces that Unity 6.3 cannot compile.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  architecture-tests:
+    name: Architecture rules
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Test
+        run: >
+          dotnet test Tests/Armada.Architecture.Tests/Armada.Architecture.Tests.csproj
+          --configuration Release
+          --logger "trx;LogFileName=architecture-tests.trx"
+          --results-directory TestResults
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: architecture-test-results
+          path: TestResults

@@ -1,0 +1,586 @@
+/*
+    Layout and components. Reads colours and sizes from Theme.uss only; no literal colour appears
+    below this line, so every rule here follows the active theme, the colourblind palette and the
+    text scale for free.
+*/
+
+.app {
+    flex-grow: 1;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-size: var(--font-size-body);
+    align-items: center;
+}
+
+/*
+    Content sits in a centred column with a ceiling on its width. Without this, a desktop window
+    stretches every button across two thousand pixels and the whole thing reads as a stack of
+    bars rather than as a menu.
+*/
+.frame {
+    flex-grow: 1;
+    width: 100%;
+    max-width: 720px;
+    padding: var(--space-md);
+}
+
+/* --- screens ------------------------------------------------------------------------------ */
+
+/*
+    Panels are hidden here and revealed by the router adding `screen--active`. Doing it in USS
+    rather than with an inline style means the Game view in edit mode - where no C# has run -
+    shows Home instead of all six panels stacked, and a controller that fails to bind degrades to
+    "one screen missing" rather than "everything at once".
+*/
+.screen {
+    display: none;
+    flex-grow: 1;
+}
+
+.screen--active {
+    display: flex;
+}
+
+.screen--centered {
+    justify-content: center;
+    align-items: center;
+}
+
+.screen__header {
+    flex-shrink: 0;
+    align-items: center;
+    padding-bottom: var(--space-sm);
+    margin-bottom: var(--space-sm);
+    border-bottom-width: 1px;
+    border-bottom-color: var(--color-border);
+}
+
+.screen__body {
+    flex-grow: 1;
+}
+
+.screen__body--centered {
+    align-items: center;
+}
+
+/*
+    A ScrollView lays out its children in an inner container, so centring has to be applied there
+    or the content pins to the top and leaves a screen's worth of empty space below it.
+*/
+.screen__body--centered .unity-scroll-view__content-container {
+    flex-grow: 1;
+    justify-content: center;
+    align-items: center;
+}
+
+/* --- type --------------------------------------------------------------------------------- */
+
+.title {
+    font-size: var(--font-size-title);
+    -unity-font-style: bold;
+    color: var(--color-text);
+    margin-bottom: var(--space-sm);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.title--hero {
+    font-size: var(--font-size-hero);
+    letter-spacing: 6px;
+    margin-bottom: var(--space-xs);
+}
+
+.title--compact {
+    font-size: var(--font-size-subtitle);
+    margin-bottom: 0;
+}
+
+.subtitle {
+    font-size: var(--font-size-subtitle);
+    color: var(--color-text-muted);
+    -unity-text-align: middle-center;
+    white-space: normal;
+    margin-bottom: var(--space-lg);
+}
+
+.caption {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    -unity-font-style: bold;
+    margin-bottom: var(--space-xs);
+    -unity-text-align: middle-center;
+}
+
+.hint {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    margin-top: var(--space-sm);
+    -unity-text-align: middle-center;
+    white-space: normal;
+}
+
+.badge {
+    font-size: var(--font-size-body);
+    -unity-font-style: bold;
+    color: var(--color-accent);
+    -unity-text-align: middle-center;
+    margin-top: var(--space-sm);
+}
+
+/* --- containers --------------------------------------------------------------------------- */
+
+.card {
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    border-width: 1px;
+    border-color: var(--color-border);
+    padding: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+
+/*
+    A capped-width column of full-width buttons. It has to centre itself rather than rely on the
+    parent: inside a centred screen the parent does it, but inside a ScrollView the default is to
+    stretch from the left, which left the mode buttons hanging off to one side of the cards above
+    them.
+*/
+.stack {
+    align-items: stretch;
+    align-self: center;
+    width: 100%;
+    max-width: 380px;
+}
+
+.toolbar {
+    flex-shrink: 0;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding-top: var(--space-sm);
+}
+
+/* --- buttons ------------------------------------------------------------------------------ */
+
+.button {
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+    margin: var(--space-xs);
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+    font-size: var(--font-size-body);
+    -unity-font-style: bold;
+    color: var(--color-text);
+    background-color: var(--color-surface-raised);
+    border-width: 1px;
+    border-color: var(--color-border-strong);
+    border-radius: var(--radius);
+    white-space: normal;
+}
+
+.button:hover {
+    background-color: var(--color-border);
+}
+
+.button:active {
+    background-color: var(--color-surface);
+}
+
+/* Focus has to be obvious: this UI is meant to be fully usable from a keyboard. */
+.button:focus {
+    border-color: var(--color-accent);
+    border-width: 3px;
+}
+
+.button--primary {
+    background-color: var(--color-accent);
+    color: var(--color-text-on-accent);
+    border-color: var(--color-accent);
+}
+
+.button--primary:hover {
+    background-color: var(--color-accent-pressed);
+    border-color: var(--color-accent-pressed);
+}
+
+.button--quiet {
+    background-color: transparent;
+    color: var(--color-text-muted);
+    border-color: transparent;
+    -unity-font-style: normal;
+}
+
+.button--quiet:hover {
+    background-color: var(--color-surface);
+}
+
+.button:disabled {
+    background-color: var(--color-disabled);
+    color: var(--color-text-muted);
+    border-color: var(--color-disabled);
+    opacity: 0.65;
+}
+
+/* --- chips (mutually exclusive choices) --------------------------------------------------- */
+
+.chips {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.chip {
+    min-height: var(--touch-target);
+    margin: var(--space-xs);
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface-raised);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: var(--radius);
+    -unity-text-align: middle-center;
+}
+
+.chip:hover {
+    color: var(--color-text);
+}
+
+.chip--selected {
+    background-color: var(--color-accent);
+    color: var(--color-text-on-accent);
+    border-color: var(--color-accent);
+    -unity-font-style: bold;
+}
+
+/* --- board -------------------------------------------------------------------------------- */
+
+.grid-host {
+    align-items: center;
+    justify-content: center;
+    margin-top: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+
+.grid {
+    align-items: center;
+    padding: var(--space-xs);
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    border-width: 1px;
+    border-color: var(--color-border);
+}
+
+.grid__row {
+    flex-direction: row;
+}
+
+/*
+    Labels have to line up with the thing they name, which means matching the cell footprint
+    including its margins. Column headers take the cell width, row numbers take the cell height,
+    and the corner takes both gutters. Sizing them all as one square is what made the letters
+    drift away from their columns.
+*/
+.grid__label {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    -unity-text-align: middle-center;
+}
+
+.grid__label--column {
+    width: var(--cell-size);
+    height: 22px;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.grid__label--row {
+    width: 26px;
+    height: var(--cell-size);
+    margin-top: 1px;
+    margin-bottom: 1px;
+}
+
+.grid__label--corner {
+    width: 26px;
+    height: 22px;
+    background-color: transparent;
+}
+
+.grid-host--small .grid__label--column { width: var(--cell-size-small); }
+.grid-host--small .grid__label--row { height: var(--cell-size-small); }
+
+.cell {
+    width: var(--cell-size);
+    height: var(--cell-size);
+    margin: 1px;
+    padding: 0;
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: var(--radius-sm);
+    background-color: var(--color-water-unknown);
+    align-items: center;
+    justify-content: center;
+}
+
+.cell:hover {
+    border-color: var(--color-border-strong);
+}
+
+.cell:focus {
+    border-color: var(--color-accent);
+    border-width: 3px;
+}
+
+.cell--water { background-color: var(--color-water); }
+.cell--ship { background-color: var(--color-ship); }
+.cell--miss { background-color: var(--color-miss); }
+.cell--hit { background-color: var(--color-hit); }
+.cell--sunk { background-color: var(--color-sunk); }
+/*
+    The placement preview. Bordered as well as filled so it reads as "this is where it would go"
+    rather than as an already-placed ship, and so the two states stay apart in greyscale.
+*/
+.cell--preview {
+    background-color: var(--color-preview);
+    border-color: var(--color-text);
+    border-width: 2px;
+}
+
+.cell--preview-invalid {
+    background-color: var(--color-preview-invalid);
+    border-color: var(--color-text);
+    border-width: 2px;
+}
+
+.cell--selected {
+    border-color: var(--color-selected);
+    border-width: 3px;
+}
+
+/*
+    The non-chromatic half of the accessibility requirement: a miss is a small hollow ring, a hit
+    is a solid diamond, a sunk cell is a wide hull bar. Three shapes that stay distinct in
+    greyscale, which is the actual test - turn the colour off and the board must still read.
+
+    Shapes are drawn with a single element on purpose. USS has no ::before/::after, so an X would
+    need two child elements per cell; on a 12x12 board that is 288 extra elements to lay out every
+    repaint, for no more legibility than a diamond gives.
+*/
+.cell__mark {
+    width: 60%;
+    height: 60%;
+}
+
+.cell__mark--dot {
+    width: 30%;
+    height: 30%;
+    border-radius: 50%;
+    border-width: 2px;
+    border-color: var(--color-text-muted);
+    background-color: transparent;
+}
+
+.cell__mark--diamond {
+    width: 52%;
+    height: 52%;
+    rotate: 45deg;
+    background-color: var(--color-text);
+}
+
+.cell__mark--hull {
+    width: 78%;
+    height: 40%;
+    border-radius: 4px;
+    background-color: var(--color-text);
+}
+
+.board-block {
+    align-items: center;
+    margin-bottom: var(--space-md);
+}
+
+/* --- fleet roster --------------------------------------------------------------------------- */
+
+.fleet {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: var(--space-xs);
+}
+
+.fleet__ship {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    background-color: var(--color-surface);
+    border-width: 1px;
+    border-color: var(--color-border);
+    border-radius: var(--radius-sm);
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+    margin: 2px;
+    -unity-text-align: middle-center;
+}
+
+/*
+    A sunk ship reads as struck out, not merely dimmed: the state has to survive greyscale and a
+    colourblind palette like every other state on this screen does.
+*/
+.fleet__ship--sunk {
+    color: var(--color-sunk);
+    border-color: var(--color-sunk);
+    -unity-font-style: bold-and-italic;
+    opacity: 0.75;
+}
+
+.fleet__count {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+    -unity-font-style: bold;
+    margin: 2px;
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+    -unity-text-align: middle-center;
+}
+
+.grid-host--small .cell {
+    width: var(--cell-size-small);
+    height: var(--cell-size-small);
+}
+
+/* --- summary ------------------------------------------------------------------------------- */
+
+.stats {
+    flex-direction: row;
+    justify-content: center;
+    margin-bottom: var(--space-lg);
+}
+
+.stat {
+    align-items: center;
+    min-width: 130px;
+    padding: var(--space-sm);
+    background-color: var(--color-surface);
+    border-radius: var(--radius);
+    border-width: 1px;
+    border-color: var(--color-border);
+    margin: var(--space-xs);
+}
+
+.stat__label {
+    font-size: var(--font-size-caption);
+    color: var(--color-text-muted);
+}
+
+.stat__value {
+    font-size: var(--font-size-title);
+    -unity-font-style: bold;
+    color: var(--color-text);
+}
+
+.summary__outcome--won { color: var(--color-win); }
+.summary__outcome--lost { color: var(--color-loss); }
+
+/* --- settings fields ------------------------------------------------------------------------ */
+
+.field {
+    margin-bottom: var(--space-sm);
+    min-height: var(--touch-target);
+    font-size: var(--font-size-body);
+    color: var(--color-text);
+}
+
+.field__label {
+    font-size: var(--font-size-body);
+    color: var(--color-text);
+    margin-bottom: var(--space-xs);
+}
+
+.field__choices {
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+/* Unity's built-in field label is too dim on a dark surface to read comfortably. */
+.field > .unity-base-field__label {
+    color: var(--color-text);
+    font-size: var(--font-size-body);
+    min-width: 140px;
+}
+
+/* --- tutorial ------------------------------------------------------------------------------- */
+
+/*
+    The onboarding sits above the screens rather than replacing them, because every step is about
+    something the player has to do on the board underneath.
+
+    It is in normal flow, not positioned absolutely: floating it over the top covered whatever
+    header happened to be underneath, and no top margin fixes that for every screen at every text
+    scale. Taking up its own space costs a strip of the screen and guarantees it never hides
+    anything.
+*/
+.tutorial {
+    display: none;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 720px;
+    align-self: center;
+    margin-top: var(--space-sm);
+    margin-left: var(--space-md);
+    margin-right: var(--space-md);
+    padding: var(--space-md);
+    background-color: var(--color-surface-raised);
+    border-radius: var(--radius);
+    border-width: 2px;
+    border-color: var(--color-accent);
+}
+
+.tutorial--visible {
+    display: flex;
+}
+
+.tutorial__text {
+    font-size: var(--font-size-body);
+    color: var(--color-text);
+    white-space: normal;
+    -unity-text-align: middle-center;
+}
+
+.tutorial__actions {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: var(--space-sm);
+}
+
+/* --- toast ---------------------------------------------------------------------------------- */
+
+.toast {
+    position: absolute;
+    bottom: var(--space-lg);
+    left: var(--space-md);
+    right: var(--space-md);
+    padding: var(--space-sm);
+    background-color: var(--color-surface-raised);
+    border-radius: var(--radius);
+    border-width: 1px;
+    border-color: var(--color-border-strong);
+    color: var(--color-text);
+    -unity-text-align: middle-center;
+    white-space: normal;
+    opacity: 0;
+    transition-property: opacity;
+    transition-duration: 0.2s;
+}
+
+.toast--visible {
+    opacity: 1;
+}
+
+/*
+    Reduce motion switches transitions off outright rather than shortening them. A player who asks
+    for less movement is not asking for faster movement.
+*/
+.theme--reduce-motion .toast {
+    transition-duration: 0s;
+}

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Coverage settings for the headless suites.
+
+  IncludeTestAssembly is required, and it is not a shortcut: Core is compiled INTO the test
+  assembly through the shared <Compile Include>, so coverlet's default of skipping the test
+  assembly would skip Core along with it and report zero.
+
+  The test sources themselves are then excluded by path, so the number that comes out is coverage
+  of Armada.Core and nothing else - which is what the M1 exit criterion (>= 90 % of lines in Core,
+  100 % in rules and projection) is measured against.
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>
+          <IncludeTestAssembly>true</IncludeTestAssembly>
+          <ExcludeByFile>**/Core.Tests/**/*.cs,**/Armada.Core.Tests/**/*.cs,**/Armada.Architecture.Tests/**/*.cs</ExcludeByFile>
+          <SkipAutoProps>true</SkipAutoProps>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

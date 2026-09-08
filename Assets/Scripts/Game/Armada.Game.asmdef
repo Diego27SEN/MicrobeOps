@@ -1,0 +1,24 @@
+{
+    "name": "Armada.Game",
+    "rootNamespace": "Armada.Game",
+    "references": [
+        "Armada.Core",
+        "Unity.Services.Core",
+        "Unity.Services.Core.Environments",
+        "Unity.Services.Authentication",
+        "Unity.Services.CloudCode",
+        "Unity.Services.CloudSave",
+        "Unity.Services.RemoteConfig",
+        "Unity.Services.Analytics",
+        "Unity.Services.CloudDiagnostics"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

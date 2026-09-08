@@ -1,0 +1,139 @@
+/*
+    Every colour and every type size in the game is declared here, once, as a variable.
+
+    Nothing anywhere else may write a hex value. That is not a style preference: it is the
+    mechanism that makes cosmetic board themes and the colourblind palettes possible at all. A
+    theme is a class on the root that overrides these variables, and if a single screen hardcodes
+    a colour, that screen silently opts out of both features. An architecture test enforces it.
+
+    The palettes below are also why water, hit and sunk are never told apart by colour alone -
+    each state carries a shape as well (see .cell__mark in Screens.uss).
+*/
+
+:root {
+    /* Surfaces, dark to light. */
+    --color-bg: rgb(11, 18, 28);
+    --color-surface: rgb(22, 33, 48);
+    --color-surface-raised: rgb(33, 48, 68);
+    --color-border: rgb(58, 82, 110);
+    --color-border-strong: rgb(96, 126, 158);
+
+    /* Text. The muted tone still clears 4.5:1 against --color-bg; it is muted, not faint. */
+    --color-text: rgb(238, 245, 252);
+    --color-text-muted: rgb(163, 184, 206);
+    --color-text-on-accent: rgb(6, 14, 22);
+
+    /* Actions */
+    --color-accent: rgb(88, 205, 228);
+    --color-accent-pressed: rgb(56, 172, 198);
+    --color-disabled: rgb(45, 58, 74);
+
+    /* Board states. Shape carries the meaning; colour only reinforces it. */
+    --color-water: rgb(30, 62, 94);
+    --color-water-unknown: rgb(21, 44, 68);
+    --color-ship: rgb(126, 146, 166);
+    --color-miss: rgb(64, 88, 114);
+    --color-hit: rgb(236, 130, 74);
+    --color-sunk: rgb(206, 64, 60);
+    --color-preview: rgb(88, 205, 228);
+    --color-preview-invalid: rgb(206, 64, 60);
+    --color-selected: rgb(246, 214, 92);
+
+    /* Outcomes */
+    --color-win: rgb(110, 208, 136);
+    --color-loss: rgb(206, 100, 100);
+
+    /* Type scale. Screens use these, never raw pixel sizes. */
+    --font-size-hero: 52px;
+    --font-size-title: 32px;
+    --font-size-subtitle: 19px;
+    --font-size-body: 18px;
+    --font-size-caption: 15px;
+
+    /* Spacing */
+    --space-xs: 4px;
+    --space-sm: 10px;
+    --space-md: 18px;
+    --space-lg: 28px;
+
+    /* Minimum touch target for controls. 44 pt is the accessibility floor. */
+    --touch-target: 56px;
+
+    /*
+        Board cells are sized independently of the type scale on purpose. Tying them together
+        meant a 12x12 board at 150 % text grew past the reference width and clipped; and cells
+        already clear the 44 pt floor at every scale, so there is nothing to gain by growing them.
+    */
+    --cell-size: 46px;
+    --cell-size-small: 26px;
+
+    --radius: 10px;
+    --radius-sm: 4px;
+}
+
+/*
+    Colourblind palettes. Protanopia and deuteranopia both lose the red/green channel, so hit and
+    sunk move to blue/yellow territory; tritanopia loses blue/yellow, so they move to red/magenta.
+    Every one of these is still paired with a distinct shape.
+*/
+
+.theme--protanopia {
+    --color-hit: rgb(244, 200, 66);
+    --color-sunk: rgb(154, 114, 226);
+    --color-miss: rgb(74, 94, 118);
+    --color-accent: rgb(98, 180, 238);
+}
+
+.theme--deuteranopia {
+    --color-hit: rgb(248, 188, 50);
+    --color-sunk: rgb(130, 126, 232);
+    --color-miss: rgb(74, 94, 118);
+    --color-accent: rgb(90, 172, 242);
+}
+
+.theme--tritanopia {
+    --color-hit: rgb(236, 112, 96);
+    --color-sunk: rgb(212, 64, 144);
+    --color-miss: rgb(90, 90, 104);
+    --color-accent: rgb(232, 100, 124);
+}
+
+/* High contrast: pushes surfaces to the extremes and thickens borders. */
+.theme--high-contrast {
+    --color-bg: rgb(0, 0, 0);
+    --color-surface: rgb(12, 12, 12);
+    --color-surface-raised: rgb(30, 30, 30);
+    --color-border: rgb(255, 255, 255);
+    --color-border-strong: rgb(255, 255, 255);
+    --color-text: rgb(255, 255, 255);
+    --color-text-muted: rgb(226, 226, 226);
+    --color-water: rgb(20, 20, 20);
+    --color-water-unknown: rgb(6, 6, 6);
+    --color-miss: rgb(120, 120, 120);
+    --color-hit: rgb(255, 194, 0);
+    --color-sunk: rgb(255, 72, 72);
+}
+
+/*
+    Text scaling. Bumping the variables rather than the elements is what lets the layouts survive
+    150 % without a second set of styles - everything that sizes off type follows automatically.
+    Cell size is deliberately absent here; see the note above.
+*/
+
+.text-scale--125 {
+    --font-size-hero: 62px;
+    --font-size-title: 40px;
+    --font-size-subtitle: 24px;
+    --font-size-body: 22px;
+    --font-size-caption: 19px;
+    --touch-target: 66px;
+}
+
+.text-scale--150 {
+    --font-size-hero: 72px;
+    --font-size-title: 48px;
+    --font-size-subtitle: 28px;
+    --font-size-body: 27px;
+    --font-size-caption: 22px;
+    --touch-target: 76px;
+}

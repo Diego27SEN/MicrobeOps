@@ -1,0 +1,49 @@
+name: core-tests
+
+# Design doc section 13.2: runs on every PR, no Unity licence, under two minutes.
+# Core is pure C#, so the whole rules engine is testable without the Editor. That is the point
+# of noEngineReferences.
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+
+jobs:
+  core-tests:
+    name: Armada.Core (dotnet test)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: Restore
+        run: dotnet restore Tests/Armada.Core.Tests/Armada.Core.Tests.csproj
+
+      - name: Build
+        run: dotnet build Tests/Armada.Core.Tests/Armada.Core.Tests.csproj --no-restore --configuration Release
+
+      - name: Test
+        run: >
+          dotnet test Tests/Armada.Core.Tests/Armada.Core.Tests.csproj
+          --no-build
+          --configuration Release
+          --logger "trx;LogFileName=core-tests.trx"
+          --results-directory TestResults
+          --collect:"XPlat Code Coverage"
+          --settings Tests/coverlet.runsettings
+
+      - name: Upload results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: core-test-results
+          path: TestResults
