@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
-public class ScenesController : MonoBehaviour
+public class SceneController : MonoBehaviour
 {
     [Header("Configuración de Transición")]
     [SerializeField] private Image fadeImage;
